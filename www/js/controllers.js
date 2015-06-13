@@ -46,14 +46,33 @@ angular.module('starter.controllers', [])
         }
     ];
 
+    $scope.livestream = {
+        url: 'http://audio-online.net:2300/live',
+        title: 'Live Radio Stream'
+    };
+
+      function updateProgress (oEvent) {
+          if (oEvent.lengthComputable) {
+              var percentComplete = oEvent.loaded / oEvent.total;
+              $scope.$apply(function() {
+                  $scope.tracks[2].loading = percentComplete;
+              });
+          } else {
+              // Unable to compute progress information since the total size is unknown
+          }
+      }
+      function transferComplete(evt) {
+          console.log("The transfer is complete.");
+      }
+
       function getData() {
 
           var request = new XMLHttpRequest();
-
+          request.addEventListener("progress", updateProgress, false);
+          request.addEventListener("load", transferComplete, false);
           request.open('GET', $scope.tracks[2].url, true);
 
           request.responseType = 'arraybuffer';
-
 
           request.onload = function() {
               var audioData = request.response;
@@ -80,18 +99,18 @@ angular.module('starter.controllers', [])
 
     function onTimeUpdate() {
         $scope.$apply(function() {
-            $scope.tracks[0].progress = audio.currentTime;
+            $scope.livestream.progress = audio.currentTime;
         });
     }
 
     function onDurationChange() {
         $scope.$apply(function() {
-            $scope.tracks[0].duration = audio.duration;
+            $scope.livestream.duration = audio.duration;
         });
     }
     function onCanPlay() {
         $scope.$apply(function() {
-            $scope.tracks[0].loaded = true;
+            $scope.livestream.loaded = true;
         });
     }
 
@@ -100,7 +119,7 @@ angular.module('starter.controllers', [])
 
         audio = new Audio();
         audio.preload = 'metadata';
-        audio.src = $scope.tracks[0].url; // 'http://audio-online.net:2300/live';
+        audio.src = $scope.livestream.url;
         audio.addEventListener('timeupdate', onTimeUpdate, false);
         audio.addEventListener('durationchange', onDurationChange, false);
         audio.addEventListener('canplay', onCanPlay, false);
