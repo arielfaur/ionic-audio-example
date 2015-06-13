@@ -24,8 +24,8 @@ angular.module('starter.controllers', [])
   $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('MusicCtrl', ['$scope',  '$cordovaNativeAudio', function($scope, $cordovaNativeAudio) {
-    var audio, urlprefix = '/android_asset/www/audio/';
+.controller('MusicCtrl', ['$scope',  function($scope) {
+    var source, context, audio, urlprefix = ionic.Platform.platform() == 'win32' ?  'audio/' : '/android_asset/www/audio/';
 
     $scope.tracks = [
         {
@@ -46,20 +46,36 @@ angular.module('starter.controllers', [])
         }
     ];
 
-    document.addEventListener("deviceready", function() {
-        window.plugins.NativeAudio.preloadComplex( 'music','audio/03 - Land Of Confusion.mp3', 1, 1, 0, function(msg){
-        }, function(msg){
-            console.log( 'error: ' + msg );
-        });
+      function getData() {
 
-    }, false);
+          var request = new XMLHttpRequest();
 
+          request.open('GET', $scope.tracks[2].url, true);
+
+          request.responseType = 'arraybuffer';
+
+
+          request.onload = function() {
+              var audioData = request.response;
+
+              context.decodeAudioData(audioData, function(buffer) {
+                    source.buffer = buffer;
+                });
+
+          };
+
+          request.send();
+      }
     $scope.playSomething = function() {
-        window.plugins.NativeAudio.play('music');
+        context = new AudioContext();
+        source =  context.createBufferSource();
+        source.connect(context.destination);
+        getData();
+        source.start(0);
     };
 
     $scope.stopSomething = function() {
-        window.plugins.NativeAudio.stop('music');
+        source.stop(0);
     };
 
     function onTimeUpdate() {
@@ -80,7 +96,7 @@ angular.module('starter.controllers', [])
     }
 
     $scope.startStream  = function() {
-        var context = new AudioContext();
+        context = new AudioContext();
 
         audio = new Audio();
         audio.preload = 'metadata';
