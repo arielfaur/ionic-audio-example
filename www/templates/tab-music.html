@@ -2,5 +2,17 @@
     <ion-content>
         <button class="button button-positive" ng-click="startStream()">Start stream</button>
         <button class="button button-assertive" ng-click="stopStream()">Stop stream</button>
+
+        <div class="list">
+            <div class="item item-button-left">
+                <button class="button button-assertive" ng-click="startStream()">
+                    <i class="icon ion-ios-play"></i>
+                </button>
+
+                {{ tracks[0].title}}
+                <span class="badge badge-assertive" ng-show="tracks[0].progress">{{ tracks[0].progress | time}}</span>
+                <!--<span class="badge badge-assertive" ng-show="tracks[2].duration">{{ tracks[2].duration | time}}</span>-->
+            </div>
+        </div>
     </ion-content>
 </ion-view>

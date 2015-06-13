@@ -1,5 +1,16 @@
 angular.module('starter.controllers', [])
+  .filter('time', function() {
+      return function(input) {
+          input = input || 0;
 
+          var t = parseInt(input,10);
+
+          var addLeadingZero = function(n) {
+              return (n < 10) ? '0' + n : n;
+          };
+          return addLeadingZero(Math.floor(t / 60)) + ':' + addLeadingZero(t % 60);
+      };
+  })
 .controller('DashCtrl', function($scope) {})
 
 .controller('ChatsCtrl', function($scope, Chats) {
@@ -51,17 +62,39 @@ angular.module('starter.controllers', [])
         window.plugins.NativeAudio.stop('music');
     };
 
+    function onTimeUpdate() {
+        $scope.$apply(function() {
+            $scope.tracks[0].progress = audio.currentTime;
+        });
+    }
+
+    function onDurationChange() {
+        $scope.$apply(function() {
+            $scope.tracks[0].duration = audio.duration;
+        });
+    }
+    function onCanPlay() {
+        $scope.$apply(function() {
+            $scope.tracks[0].loaded = true;
+        });
+    }
+
     $scope.startStream  = function() {
-        window.AudioContext = window.AudioContext || window.webkitAudioContext;
         var context = new AudioContext();
 
         audio = new Audio();
+        audio.preload = 'metadata';
+        audio.src = $scope.tracks[0].url; // 'http://audio-online.net:2300/live';
+        audio.addEventListener('timeupdate', onTimeUpdate, false);
+        audio.addEventListener('durationchange', onDurationChange, false);
+        audio.addEventListener('canplay', onCanPlay, false);
+
         var source = context.createMediaElementSource(audio);
         source.connect(context.destination);
-        audio.src = 'https://ionic-audio.s3.amazonaws.com/Message%20in%20a%20bottle.mp3'; // 'http://audio-online.net:2300/live';
+
         audio.play();
     };
     $scope.stopStream = function() {
-        audio.stop();
+        audio.pause();
     };
-}]);
+  }]);
