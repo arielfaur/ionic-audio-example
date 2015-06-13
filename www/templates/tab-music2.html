@@ -1,24 +1,6 @@
 <ion-view view-title="More Music">
   <ion-content>
       <button class="button button-positive" ng-click="playSomething()">Play</button>
-      <button class="button button-energized" ng-click="pauseSomething()">Pause</button>
       <button class="button button-assertive" ng-click="stopSomething()">Stop</button>
-      <ion-audio-track ng-repeat="track in tracks" track="track">
-          <div class="card">
-              <div class="item">
-                  <h2>{{track.title}}</h2>
-                  <p>{{track.artist}}</p>
-                  <ion-audio-controls>
-                      <button class="button button-small button-assertive icon-left" ion-audio-play text-play="Play" text-pause="Pause"></button>
-                      <!--<ion-spinner></ion-spinner>-->
-                  </ion-audio-controls>
-              </div>
-          </div>
-      </ion-audio-track>
-      <!--<div class="card">-->
-          <!--<div class="item item-divider">-->
-              <!--<ion-audio-progress-bar display-time display-info></ion-audio-progress-bar>-->
-          <!--</div>-->
-      <!--</div>-->
   </ion-content>
 </ion-view>

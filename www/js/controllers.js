@@ -13,8 +13,8 @@ angular.module('starter.controllers', [])
   $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('MusicCtrl', ['$scope', '$cordovaMedia2', function($scope, $cordovaMedia2) {
-    var media, urlprefix = '/android_asset/www/audio/';
+.controller('MusicCtrl', ['$scope',  '$cordovaNativeAudio', function($scope, $cordovaNativeAudio) {
+    var audio, urlprefix = '/android_asset/www/audio/';
 
     $scope.tracks = [
         {
@@ -36,32 +36,32 @@ angular.module('starter.controllers', [])
     ];
 
     document.addEventListener("deviceready", function() {
-        media = $cordovaMedia2.newMedia($scope.tracks[0].url);
+        window.plugins.NativeAudio.preloadComplex( 'music','audio/03 - Land Of Confusion.mp3', 1, 1, 0, function(msg){
+        }, function(msg){
+            console.log( 'error: ' + msg );
+        });
+
     }, false);
 
     $scope.playSomething = function() {
-
-        media.play().then(function() {
-            // success
-            console.log('finished playback');
-        }, null, function(data) {
-            console.log('track progress: ' + data.position);
-
-            if (data.status) {
-                console.log('track status change: ' + data.status);
-            }
-            if (data.duration) {
-                console.log('track duration: ' + data.duration);
-            }
-        });
+        window.plugins.NativeAudio.play('music');
     };
-    $scope.pauseSomething = function() {
-        media.pause();
-    };
+
     $scope.stopSomething = function() {
-        media.stop();
+        window.plugins.NativeAudio.stop('music');
     };
-    $scope.$on('destroy', function() {
-      media.release();
-    });
+
+    $scope.startStream  = function() {
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        var context = new AudioContext();
+
+        audio = new Audio();
+        var source = context.createMediaElementSource(audio);
+        source.connect(context.destination);
+        audio.src = 'https://ionic-audio.s3.amazonaws.com/Message%20in%20a%20bottle.mp3'; // 'http://audio-online.net:2300/live';
+        audio.play();
+    };
+    $scope.stopStream = function() {
+        audio.stop();
+    };
 }]);
