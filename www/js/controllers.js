@@ -25,7 +25,19 @@ angular.module('starter.controllers', [])
 })
 
 .controller('MusicCtrl', ['$scope',  function($scope) {
-    var source, context, audio, urlprefix = ionic.Platform.platform() == 'win32' ?  'audio/' : '/android_asset/www/audio/';
+    var source, context, audio, urlprefix;
+
+    switch (ionic.Platform.platform()) {
+      case 'win32':
+        urlprefix = 'audio/';
+        break;
+      case 'ios':
+        urlprefix = 'audio/';
+        break;
+      case 'android':
+        urlprefix = '/android_asset/www/audio/';
+        break;  
+    }
 
     $scope.tracks = [
         {

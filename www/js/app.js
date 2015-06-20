@@ -19,7 +19,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       StatusBar.styleLightContent();
     }
 	
-	//ionic.Platform.isFullScreen = true;
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
   });
 })
 
