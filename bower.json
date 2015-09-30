@@ -2,11 +2,18 @@
   "name": "example-audio",
   "private": "true",
   "devDependencies": {
-    "ionic": "driftyco/ionic-bower#1.0.0-rc.5"
+    "ionic": "driftyco/ionic-bower#1.1.0"
   },
   "dependencies": {
     "ngCordova": "*",
     "cordovaMedia2": "~1.0.*",
-    "ionic-audio": "~1.2.3"
+    "ionic-audio": "~1.2.*"
+  },
+  "resolutions": {
+    "angular": "1.4.6",
+    "angular-loader": "~1.4.x",
+    "angular-mocks": "~1.4.x",
+    "angular-animate": "1.4.3",
+    "angular-sanitize": "1.4.3"
   }
 }
