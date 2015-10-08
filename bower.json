@@ -6,14 +6,9 @@
   },
   "dependencies": {
     "ngCordova": "*",
-    "cordovaMedia2": "~1.0.*",
     "ionic-audio": "~1.2.*"
   },
   "resolutions": {
-    "angular": "1.4.6",
-    "angular-loader": "~1.4.x",
-    "angular-mocks": "~1.4.x",
-    "angular-animate": "1.4.3",
-    "angular-sanitize": "1.4.3"
+    "angular": "^1.4.x"
   }
 }

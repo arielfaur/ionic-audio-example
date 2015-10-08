@@ -13,8 +13,8 @@ angular.module('starter.controllers', [])
   $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('MusicCtrl', ['$scope', '$cordovaMedia2', function($scope, $cordovaMedia2) {
-    var media, urlprefix = '/android_asset/www/audio/';
+.controller('MusicCtrl', ['$scope', function($scope) {
+    var urlprefix = '/android_asset/www/audio/';
 
     $scope.tracks = [
         {
@@ -35,33 +35,18 @@ angular.module('starter.controllers', [])
         }
     ];
 
-    document.addEventListener("deviceready", function() {
-        media = $cordovaMedia2.newMedia($scope.tracks[0].url);
-    }, false);
 
     $scope.playSomething = function() {
 
-        media.play().then(function() {
-            // success
-            console.log('finished playback');
-        }, null, function(data) {
-            console.log('track progress: ' + data.position);
 
-            if (data.status) {
-                console.log('track status change: ' + data.status);
-            }
-            if (data.duration) {
-                console.log('track duration: ' + data.duration);
-            }
-        });
     };
     $scope.pauseSomething = function() {
-        media.pause();
+
     };
     $scope.stopSomething = function() {
-        media.stop();
+
     };
     $scope.$on('destroy', function() {
-      media.release();
+
     });
 }]);

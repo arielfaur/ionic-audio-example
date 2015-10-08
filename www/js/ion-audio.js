@@ -296,7 +296,7 @@ angular.module('ionic-audio', ['ionic'])
     .directive('ionAudioControls', [function() {
         return {
           restrict: 'EA',
-          scope: {},
+          //scope: {},
           require: ['ionAudioControls', '^^ionAudioTrack'],
           controller: ['$scope', '$element', function($scope, $element) {
               var spinnerElem = $element.find('ion-spinner'), hasLoaded, self = this;
@@ -342,7 +342,7 @@ angular.module('ionic-audio', ['ionic'])
               var ionAudioTrackCtrl = controllers[1];
               controllers[0].play = ionAudioTrackCtrl.play;
 
-              scope.track = ionAudioTrackCtrl.getTrack();
+              //scope.track = ionAudioTrackCtrl.getTrack();
           }
         }
     }])
@@ -354,7 +354,7 @@ angular.module('ionic-audio', ['ionic'])
             link: function(scope, element, attrs, controllers) {
                 var isLoading, currentStatus = 0;
                 
-                scope.track = controllers[0].getTrack();
+                //scope.track = controllers[0].getTrack();
                 
                 var controller = controllers[1];
 
