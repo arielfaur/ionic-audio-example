@@ -209,25 +209,21 @@ angular.module('ionic-audio', ['ionic'])
             controller: ['$scope', function($scope) {
                 var media, controller = this;
 
-                $scope.track.progress = 0;
-                $scope.track.status = 0;
-                $scope.track.duration = -1;
+                var init = function() {
+                    $scope.track.progress = 0;
+                    $scope.track.status = 0;
+                    $scope.track.duration = -1;
+                };
 
                 var playbackSuccess = function() {
-                    console.log('finished playback');
                     $scope.track.status = 0;
                     $scope.track.progress = 0;
                     media = undefined;
                 };
 
                 var updateTrackData = function(data) {
-                    console.log('track progress: ' + data.position);
                     data.position && ($scope.track.progress = data.position);
-
-                    console.log('track status change: ' + data.status);
                     data.status && ($scope.track.status = data.status);
-
-                    console.log('track duration: ' + data.duration);
                     data.duration && ($scope.track.duration = data.duration);
                 };
 
@@ -236,14 +232,12 @@ angular.module('ionic-audio', ['ionic'])
                 };
 
                 var start = function() {
-                    console.log('ionic-audio: playing track ' + $scope.track.title);
-
                     $timeout(function() {
                         media.play().then(playbackSuccess, null, updateTrackData);
                     }, 300);
                 };
 
-                this.play = function() {
+                $scope.track.play = function() {
                     if (!MediaManager) return;
 
                     // first time this track is being played
@@ -252,7 +246,6 @@ angular.module('ionic-audio', ['ionic'])
 
                         // start playback
                         start();
-
                         // notify global progress bar if detached from track
                         if (!controller.hasOwnProgressBar) notifyProgressBar();
 
@@ -264,21 +257,15 @@ angular.module('ionic-audio', ['ionic'])
                         var status = media.getStatus();
 
                         if (status === Media.MEDIA_RUNNING) {
-                            console.log('ionic-audio: pausing track ' + $scope.track.title);
                             media.pause();
                         } else if (status === Media.MEDIA_PAUSED) {
                             // resume
-                            console.log('ionic-audio: resuming track ' + $scope.track.title);
                             start();
                         }
                     }
-
-                    return $scope.track.id;
                 };
 
-                this.getTrack = function() {
-                    return $scope.track;
-                };
+                init();
 
                 if (MediaManager) {
                     $scope.track.id = MediaManager.add($scope.track);
@@ -296,8 +283,6 @@ angular.module('ionic-audio', ['ionic'])
     .directive('ionAudioControls', [function() {
         return {
           restrict: 'EA',
-          //scope: {},
-          require: ['ionAudioControls', '^^ionAudioTrack'],
           controller: ['$scope', '$element', function($scope, $element) {
               var spinnerElem = $element.find('ion-spinner'), hasLoaded, self = this;
 
@@ -307,11 +292,11 @@ angular.module('ionic-audio', ['ionic'])
                   spinnerElem.toggleClass('ng-hide');
               };
 
-              this.playTrack = function() {
+              this.play = function() {
                   if (!hasLoaded) {
                       self.toggleSpinner();
                   }
-                  self.play();
+                  $scope.track.play();
               };
 
               var unbindStatusListener = $scope.$watch('track.status', function (status) {
@@ -337,27 +322,16 @@ angular.module('ionic-audio', ['ionic'])
               $scope.$on('$destroy', function() {
                   unbindStatusListener();
               });
-          }],
-          link: function(scope, element, attrs, controllers) {
-              var ionAudioTrackCtrl = controllers[1];
-              controllers[0].play = ionAudioTrackCtrl.play;
-
-              //scope.track = ionAudioTrackCtrl.getTrack();
-          }
+          }]
         }
     }])
-    .directive('ionAudioPlay', [function() {
+    .directive('ionAudioPlay', ['$ionicGesture', function($ionicGesture) {
         return {
-            //scope: true,
             restrict: 'A',
-            require: ['^^ionAudioTrack', '^^ionAudioControls'],
-            link: function(scope, element, attrs, controllers) {
-                var isLoading, currentStatus = 0;
+            require: '^^ionAudioControls',
+            link: function(scope, element, attrs, controller) {
+                var isLoading, debounce, currentStatus = 0;
                 
-                //scope.track = controllers[0].getTrack();
-                
-                var controller = controllers[1];
-
                 var init = function() {
                     isLoading = false;
                     element.addClass('ion-play');
@@ -376,13 +350,21 @@ angular.module('ionic-audio', ['ionic'])
                     setText();
                 };
 
-                element.on('click', function() {
-                    if (isLoading) return;  //  debounce multiple clicks
+                $ionicGesture.on('tap', function() {
+                    // debounce while loading and multiple clicks
+                    if (debounce || isLoading) {
+                        debounce = false;
+                        return;
+                    }
 
-                    controller.playTrack();
+                    controller.play();
                     togglePlaying();
                     if (currentStatus == 0) isLoading = true;
-                });
+                }, element);
+
+                $ionicGesture.on('doubletap', function() {
+                    debounce = true;
+                }, element);
 
                 var unbindStatusListener = scope.$watch('track.status', function (status) {
                     //  Media.MEDIA_NONE or Media.MEDIA_STOPPED
@@ -413,16 +395,14 @@ angular.module('ionic-audio', ['ionic'])
                 '<input type="range" name="volume" min="0" max="{{track.duration}}" ng-model="track.progress" on-release="sliderRelease()" disabled>' +
                 '<ion-audio-duration track="track"></ion-audio-duration>' +
                 '</div>',
-            require: '?^^ionAudioTrack',
-            scope: {},
-            link: function(scope, element, attrs, controller) {
+            link: function(scope, element, attrs) {
                 var slider =  element.find('input'), unbindTrackListener;
 
-                scope.track = {
-                    progress: 0,
-                    status: 0,
-                    duration: -1
-                };
+                function init() {
+                    scope.track.progress = 0;
+                    scope.track.status = 0;
+                    scope.track.duration = -1;
+                }
 
                 if (!angular.isDefined(attrs.displayTime)) {
                     element.find('ion-audio-progress').remove();
@@ -432,32 +412,33 @@ angular.module('ionic-audio', ['ionic'])
                     element.find('h2').remove();
                 }
 
-                // hide/show track info if available
-                scope.displayTrackInfo = function() {
-                    return { visibility: angular.isDefined(attrs.displayInfo) && (scope.track.title || scope.track.artist) ? 'visible' : 'hidden'}
-                };
+                if (angular.isUndefined(scope.track)) {
+                    scope.track = {};
 
-                // disable slider if track is not playing
-                var unbindStatusListener = scope.$watch('track.status', function(status) {
-                    // disable if track hasn't loaded
-                    slider.prop('disabled', status == 0);   //   Media.MEDIA_NONE
-                });
-
-                if (controller) {
-                    // get track from parent audio track directive
-                    scope.track = controller.getTrack();
-                } else {
-                    // get track from current playing track elsewhere in the DOM
+                    // listens for track changes elsewhere in the DOM
                     unbindTrackListener = scope.$on('ionic-audio:trackChange', function (e, track) {
                         scope.track = track;
                     });
                 }
+
+                // hide/show track info if available
+                scope.displayTrackInfo = function() {
+                    return { visibility: angular.isDefined(attrs.displayInfo) && (scope.track.title || scope.track.artist) ? 'visible' : 'hidden'}
+                };
 
                 // handle track seek-to
                 scope.sliderRelease = function() {
                     var pos = scope.track.progress;
                     MediaManager.seekTo(pos);
                 };
+
+                // disable slider if track is not playing
+                var unbindStatusListener = scope.$watch('track.status', function(status) {
+                    // disable if track hasn't loaded
+                    slider.prop('disabled', status == 0);   // Media.MEDIA_NONE
+                });
+
+                init();
 
                 scope.$on('$destroy', function() {
                     unbindStatusListener();
