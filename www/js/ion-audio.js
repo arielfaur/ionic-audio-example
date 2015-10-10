@@ -1,6 +1,6 @@
 /*
 * v1.3.0
-* Adds dynamic track support (watches for the "track" parameter)
+* TODO: Add dynamic track support (watch for the "track" parameter)
 * TODO: Adds playlist support
 * Complete rewrite of MediaManager and new IonicMedia class based on promises
 * */
