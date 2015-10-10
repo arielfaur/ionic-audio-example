@@ -206,13 +206,18 @@ angular.module('ionic-audio', ['ionic'])
             scope: {
                 track: '='
             },
-            controller: ['$scope', function($scope) {
-                var media, controller = this;
+            controller: ['$scope', '$element', function($scope, $element) {
+                var media,
+                  hasOwnProgressBar = $element.find('ion-audio-progress-bar').length > 0;
 
                 var init = function() {
                     $scope.track.progress = 0;
                     $scope.track.status = 0;
                     $scope.track.duration = -1;
+
+                    if (MediaManager) {
+                        $scope.track.id = MediaManager.add($scope.track);
+                    }
                 };
 
                 var playbackSuccess = function() {
@@ -247,7 +252,7 @@ angular.module('ionic-audio', ['ionic'])
                         // start playback
                         start();
                         // notify global progress bar if detached from track
-                        if (!controller.hasOwnProgressBar) notifyProgressBar();
+                        if (!hasOwnProgressBar) notifyProgressBar();
 
                         return;
                     }
@@ -267,17 +272,10 @@ angular.module('ionic-audio', ['ionic'])
 
                 init();
 
-                if (MediaManager) {
-                    $scope.track.id = MediaManager.add($scope.track);
-                }
-            }],
-            link: function(scope, element, attrs, controller) {
-                controller.hasOwnProgressBar = element.find('ion-audio-progress-bar').length > 0;
-
-                scope.$on('$destroy', function() {
+                $scope.$on('$destroy', function() {
                     MediaManager.destroy();
                 });
-            }
+            }]
         }
     }])
     .directive('ionAudioControls', [function() {
