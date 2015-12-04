@@ -13,7 +13,7 @@ angular.module('starter.controllers', [])
   $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('MusicCtrl', ['$scope', function($scope) {
+.controller('MusicCtrl', ['$scope', 'MediaManager', function($scope, MediaManager) {
     var urlprefix = '/android_asset/www/audio/';
 
     $scope.tracks = [
@@ -35,18 +35,8 @@ angular.module('starter.controllers', [])
         }
     ];
 
-
-    $scope.playSomething = function() {
-
-
+    $scope.stopPlayback = function() {
+        MediaManager.stop();
     };
-    $scope.pauseSomething = function() {
 
-    };
-    $scope.stopSomething = function() {
-
-    };
-    $scope.$on('destroy', function() {
-
-    });
 }]);
