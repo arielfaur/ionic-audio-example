@@ -2,7 +2,11 @@
     <ion-content>
         <button class="button button-assertive" ng-click="stopPlayback()">Stop all</button>
 
-        <ion-audio-track ng-repeat="track in tracks" track="track">
+        <button class="button button-assertive" ng-click="track = tracks[2]">Play Tonight. Tonight. Tonight</button>
+        <button class="button button-assertive" ng-click="track = tracks[1]">Land of Confusion</button>
+        <button class="button button-assertive" ng-click="track = tracks[0]">Message in a bottle</button>
+
+        <ion-audio-track track="track">
             <div class="card">
                 <div class="item item-thumbnail-left">
                     <img src="{{track.art}}" ng-show="track.art">
@@ -16,7 +20,7 @@
                     </ion-audio-controls>
                 </div>
                 <div class="item item-divider">
-                    <ion-audio-progress-bar display-time></ion-audio-progress-bar>
+                    <ion-audio-progress-bar track="track" display-time></ion-audio-progress-bar>
                 </div>
             </div>
         </ion-audio-track>
