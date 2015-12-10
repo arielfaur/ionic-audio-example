@@ -35,7 +35,7 @@ angular.module('starter.controllers', [])
         }
     ];
 
-    $scope.track = {};
+    $scope.observableTrack = {};
 
     $scope.stopPlayback = function() {
         MediaManager.stop();

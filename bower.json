@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "ngCordova": "*",
-    "ionic-audio": "~1.2.*"
+    "ionic-audio": "~1.2.6"
   },
   "resolutions": {
     "angular": "^1.4.x"
