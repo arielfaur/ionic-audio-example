@@ -9695,11 +9695,11 @@ audio-track audio-track-progress-bar {
   audio-track audio-track-progress-bar [type=range] {
     -webkit-appearance: none;
     margin: 10px 0;
-    width: 80%; }
+    width: 50%; }
     audio-track audio-track-progress-bar [type=range]:focus {
       outline: none; }
     audio-track audio-track-progress-bar [type=range]::-webkit-slider-runnable-track {
-      width: 80%;
+      width: 50%;
       height: 5px;
       cursor: pointer;
       -webkit-transition: all .2s ease;
