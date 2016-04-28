@@ -121,7 +121,7 @@
         <li>Import ionic-audio components and directives in every page you need it:
           <p><pre>
         import {Page} from 'ionic-angular';
-        <strong>import {AudioTrackComponent, AudioTrackPlayComponent, AudioTrackProgressComponent, AudioTrackProgressBarComponent, IAudioTrack, ITrackConstraint, AudioTimePipe, AudioProvider} from 'ionic-audio/dist/ionic-audio';</strong>
+        <strong>import {AudioTrackComponent, AudioTrackPlayComponent, AudioTrackProgressComponent, AudioTrackProgressBarComponent, AudioTimePipe, AudioProvider} from 'ionic-audio/dist/ionic-audio';</strong>
         import {Provider} from 'angular2/core';
 
         @Page({
@@ -130,7 +130,7 @@
           providers: [] 
         })
         export class Page1 {
-          <strong>myTracks: ITrackConstraint[];</strong>
+          <strong>myTracks: any[];</strong>
           
           constructor(private _audioProvider: AudioProvider) {
             
