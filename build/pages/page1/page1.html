@@ -3,9 +3,9 @@
 </ion-navbar>
 
 <ion-content padding class="page1">
-  <h2>Welcome to Ionic!</h2>
+  <h2>Welcome to Ionic-Audio!</h2>
   <p>
-    This starter project shows the new Ionic Audio 2 library.
+    This demo shows the new Ionic Audio 2 library.
   </p>
   
   <ion-list>
@@ -17,8 +17,8 @@
         </ion-thumbnail>
         
         <p><strong>{{audio.title}}</strong> &#x26AC; <em>{{audio.artist}}</em></p>
-        <audio-track-progress-bar dark duration progress [audioTrack]="audio" [ngStyle]="{visibility: audio.completed > 0 ? 'visible' : 'hidden', 'width': '70%'}"></audio-track-progress-bar>
-        <em style="font-size:.8rem">Track ID: {{audio.id}}</em>
+        <audio-track-progress-bar dark duration progress [audioTrack]="audio" [ngStyle]="{visibility: audio.completed > 0 ? 'visible' : 'hidden'}"></audio-track-progress-bar>
+        <em style="font-size:.5em">Track ID: {{audio.id}}</em>
       </ion-item>    
     </audio-track>
   </ion-list>
@@ -32,12 +32,12 @@
       
       <h2>{{track.title}}</h2>
       <p><audio-track-progress [audioTrack]="track"></audio-track-progress></p>
-      <em style="font-size:.8rem">Track ID: {{track.id}}</em>
+      <em style="font-size:.5em">Track ID: {{track.id}}</em>
     </ion-item>    
   </audio-track>
   
   <h3>API Usage</h3>
-  <h4>Using WebAudioProvider to control playback</h4>
+  <h4>Using AudioProvider to control playback</h4>
   <ion-list>
     <ion-item>
       <ion-label>Select track to play</ion-label>
@@ -46,9 +46,7 @@
       </ion-select>
     </ion-item>
   </ion-list>
-  <button block outline small (click)="playSelectedTrack()">Play </button>
-  <button block secondary outline small (click)="pauseSelectedTrack()">Pause </button>
-
-  <h4>Using AudioTrack class</h4>
-  <button outline small (click)="play()">Play</button><button secondary outline small (click)="pause()">Pause</button><button danger outline small (click)="stop()">Stop</button>
+  <button block outline (click)="playSelectedTrack()">Play</button>
+  <button block secondary outline (click)="pauseSelectedTrack()">Pause</button>
+  <button block danger outline (click)="stopSelectedTrack()">Stop</button>
 </ion-content>
