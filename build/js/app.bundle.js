@@ -94,10 +94,6 @@ var Page1 = (function () {
         // use AudioProvider to control selected track 
         this._audioProvider.pause(this.selectedTrack);
     };
-    Page1.prototype.stopSelectedTrack = function () {
-        // use AudioProvider to control selected track 
-        this._audioProvider.stop(this.selectedTrack);
-    };
     Page1.prototype.onTrackFinished = function (track) {
         console.log('Track finished', track);
     };
@@ -63753,6 +63749,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var core_1 = require('angular2/core');
+window.AudioContext = window['AudioContext'] || window['webkitAudioContext'];
 /**
  * Creates an HTML5 audio track
  *
@@ -63763,8 +63760,10 @@ var core_1 = require('angular2/core');
  */
 var WebAudioTrack = (function () {
     function WebAudioTrack(src, preload, ctx) {
+        // audio context not needed for now
+        // this.ctx = this.ctx || new AudioContext();
         if (preload === void 0) { preload = 'none'; }
-        if (ctx === void 0) { ctx = new (AudioContext || webkitAudioContext)(); }
+        if (ctx === void 0) { ctx = undefined; }
         this.src = src;
         this.preload = preload;
         this.ctx = ctx;
