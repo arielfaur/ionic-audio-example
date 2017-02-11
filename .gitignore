@@ -1,8 +1,0 @@
-# Specifies files to intentionally ignore when using Git
-# http://git-scm.com/docs/gitignore
-
-node_modules/
-.vscode/
-*.swp
-.DS_Store
-Thumbs.db
